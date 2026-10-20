@@ -1,0 +1,19 @@
+# Fichiers système et éditeurs
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+
+# Secrets (clés Stripe, Supabase, service d'e-mails… le jour où vous en aurez)
+.env
+.env.*
+
+# Réglages locaux de Claude Code (le launch.json partagé reste versionné)
+.claude/settings.local.json
+
+# Vidéos exportées : lourdes, et elles se régénèrent depuis motion.html / motion-media.html
+exports/
+
+# Photos originales non retouchées du staff (données personnelles) :
+# seules les versions détourées de assets/staff/ sont publiées
+assets/staff/src/

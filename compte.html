@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon compte — Warmup Esport</title>
+  <meta name="description" content="Connecte-toi ou crée ton compte Warmup Esport pour commander et suivre tes maillots.">
+  <link rel="icon" href="assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,700;1,800&family=Barlow:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="compte">
+  <main>
+    <section class="page-hero">
+      <img class="bg-logo" src="assets/logo.png" alt="">
+      <div class="container">
+        <div class="breadcrumb"><a href="index.html">Accueil</a> / Mon compte</div>
+        <h1 id="page-title">Mon <span class="grad">compte</span></h1>
+        <p class="lead" id="page-lead">Connecte-toi ou rejoins la team pour commander tes maillots et suivre tes commandes.</p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:60px">
+      <div class="container">
+        <div class="notice demo">⚠️ <span><b>Mode démo</b> : les comptes sont enregistrés uniquement dans ce navigateur et les e-mails sont simulés (<a href="emails/apercu.html">voir la boîte d'envoi</a>). Ils seront branchés sur un vrai service avant la mise en ligne.</span></div>
+        <div class="notice" id="checkout-notice" hidden>🛒 <span>Connecte-toi ou crée ton compte pour finaliser ta commande : <b>ton panier est conservé</b>.</span></div>
+
+        <!-- Connexion / inscription -->
+        <div class="auth-grid" id="auth" hidden>
+          <div class="auth-card">
+            <h2>Déjà <span class="grad">membre ?</span></h2>
+            <p>Connecte-toi avec ton e-mail.</p>
+            <form id="login-form" novalidate>
+              <div class="form-group"><label class="field-label" for="l-email">E-mail</label><input id="l-email" type="email" autocomplete="email" required></div>
+              <div class="form-group">
+                <label class="field-label" for="l-pass">Mot de passe</label>
+                <div class="input-wrap"><input id="l-pass" type="password" autocomplete="current-password" required><button type="button" class="toggle">Afficher</button></div>
+              </div>
+              <div class="field-error" id="login-error"></div>
+              <button class="btn full" type="submit">Se connecter <span class="arrow">→</span></button>
+            </form>
+          </div>
+
+          <div class="auth-card highlight">
+            <h2>Nouveau ? <span class="grad">Rejoins la team</span></h2>
+            <p>Crée ton compte en 30 secondes.</p>
+            <ul class="perks-list">
+              <li>Suivi de tes commandes en temps réel</li>
+              <li>Adresses de livraison enregistrées</li>
+              <li>Accès en avant-première aux nouveaux maillots</li>
+            </ul>
+            <form id="register-form" novalidate>
+              <div class="form-row">
+                <div class="form-group"><label class="field-label" for="r-first">Prénom</label><input id="r-first" autocomplete="given-name" required></div>
+                <div class="form-group"><label class="field-label" for="r-last">Nom</label><input id="r-last" autocomplete="family-name" required></div>
+              </div>
+              <div class="form-group"><label class="field-label" for="r-email">E-mail</label><input id="r-email" type="email" autocomplete="email" required></div>
+              <div class="form-group">
+                <label class="field-label" for="r-pass">Mot de passe</label>
+                <div class="input-wrap"><input id="r-pass" type="password" autocomplete="new-password" required><button type="button" class="toggle">Afficher</button></div>
+                <span class="hint">8 caractères minimum, dont au moins un chiffre.</span>
+              </div>
+              <label class="check"><input type="checkbox" id="r-news"> Je veux recevoir les drops et actus Warmup Esport par e-mail.</label>
+              <label class="check"><input type="checkbox" id="r-cgv" required> <span>J'accepte les <a href="cgv.html" target="_blank" style="color:var(--violet-2);text-decoration:underline">conditions générales de vente</a> et j'ai lu la <a href="confidentialite.html" target="_blank" style="color:var(--violet-2);text-decoration:underline">politique de confidentialité</a>.</span></label>
+              <div class="field-error" id="register-error"></div>
+              <button class="btn full" type="submit">Créer mon compte <span class="arrow">→</span></button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Espace client -->
+        <div class="dash" id="dash" hidden>
+          <aside class="dash-side">
+            <div class="dash-avatar" id="d-avatar"></div>
+            <h3 id="d-name"></h3>
+            <p id="d-email"></p>
+            <a href="boutique.html" class="btn">Boutique</a>
+            <a href="emails/apercu.html" class="btn btn-ghost">Mes e-mails (démo)</a>
+            <button class="btn btn-ghost" id="logout">Se déconnecter</button>
+          </aside>
+          <div>
+            <h2>Mes <span class="grad">commandes</span></h2>
+            <div id="orders"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/account.js"></script>
+</body>
+</html>

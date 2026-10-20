@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Warmup Esport</title>
+  <meta name="description" content="Contacte Warmup Esport : commandes, partenariats, recrutement.">
+  <link rel="icon" href="assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,700;1,800&family=Barlow:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="contact">
+  <main>
+    <section class="page-hero">
+      <img class="bg-logo" src="assets/logo.png" alt="">
+      <div class="container">
+        <div class="breadcrumb"><a href="index.html">Accueil</a> / Contact</div>
+        <h1>Parlons <span class="grad">ensemble</span></h1>
+        <p class="lead">Commande, partenariat, recrutement ou simple message de soutien : on lit tout.</p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:60px">
+      <div class="container contact-grid">
+        <div class="contact-cards">
+          <a class="contact-card mail-link reveal" href="#"><span class="ico">✉️</span><div><b>E-mail</b><small></small></div></a>
+          <a class="contact-card discord-link reveal d1" href="#" target="_blank" rel="noopener"><span class="ico">💬</span><div><b>Discord</b><small>Rejoins la communauté</small></div></a>
+          <div class="contact-card reveal d2"><span class="ico">⏱️</span><div><b>Temps de réponse</b><small>Sous 48h en moyenne</small></div></div>
+          <div class="contact-card reveal d3"><span class="ico">📍</span><div><b>Basés en</b><small>France</small></div></div>
+        </div>
+
+        <div class="form reveal d1">
+          <form id="contact-form">
+            <div class="form-row">
+              <div class="form-group"><label class="field-label" for="name">Nom / Pseudo</label><input id="name" name="name" required autocomplete="name"></div>
+              <div class="form-group"><label class="field-label" for="email">E-mail</label><input id="email" name="email" type="email" required autocomplete="email"></div>
+            </div>
+            <div class="form-group">
+              <label class="field-label" for="subject">Sujet</label>
+              <select id="subject" name="subject">
+                <option value="question">Question générale</option>
+                <option value="commande">Commande / boutique</option>
+                <option value="partenariat">Partenariat / sponsoring</option>
+                <option value="recrutement">Recrutement</option>
+                <option value="autre">Autre</option>
+              </select>
+            </div>
+            <div class="form-group"><label class="field-label" for="message">Message</label><textarea id="message" name="message" required></textarea></div>
+            <p class="hint" style="margin:0 0 22px">Tes données servent uniquement à répondre à ta demande et ne sont jamais cédées. <a href="confidentialite.html" style="color:var(--violet-2);text-decoration:underline">En savoir plus</a>.</p>
+            <button class="btn" type="submit">Envoyer le message <span class="arrow">→</span></button>
+          </form>
+          <div class="form-success">
+            <div class="ok">✓</div>
+            <h3 style="text-transform:uppercase">Message envoyé !</h3>
+            <p style="color:var(--muted)">Merci, on revient vers toi très vite.</p>
+            <a href="index.html" class="btn btn-ghost">Retour à l'accueil</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

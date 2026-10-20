@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boîte d'envoi (démo) — Warmup Esport</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="../assets/logo.png">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; display: grid; grid-template-columns: 320px 1fr; height: 100vh; background: #0b0911; color: #f1edfb; font: 14px Inter, system-ui, sans-serif; }
+    aside { overflow: auto; border-right: 1px solid #2a2140; background: #0e0b16; }
+    header { padding: 20px; border-bottom: 1px solid #2a2140; }
+    header h1 { margin: 0 0 4px; font-size: 16px; }
+    header p { margin: 0 0 10px; color: #9d95b8; font-size: 12px; line-height: 1.5; }
+    header a { color: #b07cff; font-size: 13px; }
+    .mail { display: block; width: 100%; padding: 14px 20px; text-align: left; border: 0; border-bottom: 1px solid #1d1729; background: none; color: inherit; font: inherit; cursor: pointer; }
+    .mail:hover { background: #15101f; }
+    .mail.on { background: #1d1235; box-shadow: inset 3px 0 0 #8b3dff; }
+    .mail b { display: block; margin-bottom: 3px; }
+    .mail small { color: #9d95b8; }
+    .empty { padding: 30px 20px; color: #9d95b8; line-height: 1.6; }
+    main { display: flex; flex-direction: column; min-width: 0; }
+    .meta { padding: 16px 24px; border-bottom: 1px solid #2a2140; color: #9d95b8; line-height: 1.6; }
+    .meta b { color: #fff; }
+    iframe { flex: 1; width: 100%; border: 0; background: #050505; }
+    @media (max-width: 760px) { body { grid-template-columns: 1fr; grid-template-rows: auto 1fr; height: auto; } aside { max-height: 40vh; } iframe { min-height: 80vh; } }
+  </style>
+</head>
+<body>
+  <aside>
+    <header>
+      <h1>📧 Boîte d'envoi (démo)</h1>
+      <p>Les e-mails que le site enverra réellement une fois branché à un service d'envoi. Ici, ils sont simulés et remplis avec les vraies données du compte et de la commande.</p>
+      <a href="../index.html">← Retour au site</a>
+    </header>
+    <div id="list"></div>
+  </aside>
+  <main>
+    <div class="meta" id="meta"></div>
+    <iframe id="frame" title="Aperçu de l'e-mail"></iframe>
+  </main>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/auth.js"></script>
+  <script>
+    const euro = (n) => n.toFixed(2).replace(".", ",") + " €";
+    const SUBJECTS = { bienvenue: (d) => `Bienvenue dans la team, ${d.prenom} 💜`, commande: (d) => `Commande ${d.numero_commande} confirmée ✅` };
+    const users = Store.get("wu-users", {});
+
+    // Variables de chaque modèle (c'est ce que le futur service d'envoi devra fournir)
+    function variables(mail) {
+      const base = { site_url: location.origin, email_contact: SITE.email, lien_desinscription: location.origin + "/compte.html" };
+      if (mail.template === "bienvenue") return { ...base, prenom: mail.data.prenom };
+      const o = Orders.get(mail.data.orderId);
+      if (!o) return null;
+      const s = o.shipping, a = s.address;
+      return {
+        ...base,
+        prenom: s.firstName,
+        numero_commande: o.id,
+        date_commande: new Date(o.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }),
+        lignes_articles: o.items.map((i) => `
+            <tr>
+              <td style="padding:12px 0;border-bottom:1px solid #2a2140;">
+                <b style="color:#ffffff;">${i.name}</b><br>
+                <span style="font-size:13px;color:#9d95b8;">Taille ${i.size}${i.flock ? " · Flocage " + i.flock : ""} · Qté ${i.qty}</span>
+              </td>
+              <td align="right" style="padding:12px 0;border-bottom:1px solid #2a2140;white-space:nowrap;">${euro(i.price * i.qty)}</td>
+            </tr>`).join(""),
+        sous_total: euro(o.subtotal),
+        frais_livraison: o.shipping.cost ? euro(o.shipping.cost) : "Offerte",
+        total: euro(o.total),
+        mode_livraison: `${s.label} · ${s.carrier}`,
+        adresse_livraison: a.mode === "home"
+          ? `${s.firstName} ${s.lastName}<br>${a.line1}${a.line2 ? ", " + a.line2 : ""}<br>${a.zip} ${a.city}, ${a.country}`
+          : `${a.relay.name}<br>${a.relay.street}<br>${a.relay.zip} ${a.relay.city}`,
+        date_livraison: deliveryEstimate(o),
+        moyen_paiement: `${o.payment.brand} •••• ${o.payment.last4}`,
+      };
+    }
+
+    async function show(mail, btn) {
+      document.querySelectorAll(".mail").forEach((b) => b.classList.toggle("on", b === btn));
+      const vars = variables(mail);
+      if (!vars) { document.getElementById("meta").textContent = "Commande introuvable."; return; }
+      const tpl = await (await fetch(mail.template + ".html", { cache: "no-store" })).text();
+      document.getElementById("frame").srcdoc = tpl.replace(/\{\{(\w+)\}\}/g, (m, k) => vars[k] ?? m);
+      document.getElementById("meta").innerHTML =
+        `<b>Objet :</b> ${SUBJECTS[mail.template](vars)}<br><b>À :</b> ${mail.to} · <b>De :</b> Warmup Esport &lt;${SITE.email}&gt; · ${new Date(mail.date).toLocaleString("fr-FR")}`;
+    }
+
+    const mails = Mail.list(), list = document.getElementById("list");
+    if (!mails.length) {
+      list.innerHTML = `<div class="empty">Aucun e-mail pour l'instant.<br>Crée un compte ou passe une commande sur le site pour en voir apparaître ici.</div>`;
+    } else {
+      mails.forEach((m) => {
+        const b = document.createElement("button");
+        b.className = "mail";
+        b.innerHTML = `<b>${m.template === "bienvenue" ? "👋 Bienvenue" : "✅ Commande confirmée"}</b><small>${m.to} · ${new Date(m.date).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" })}</small>`;
+        b.onclick = () => show(m, b);
+        list.append(b);
+      });
+      // Ouvre l'e-mail de la commande demandée (?order=…), sinon le plus récent
+      const wanted = new URLSearchParams(location.search).get("order");
+      const i = Math.max(0, mails.findIndex((m) => m.data.orderId === wanted));
+      show(mails[i], list.children[i]);
+    }
+  </script>
+</body>
+</html>

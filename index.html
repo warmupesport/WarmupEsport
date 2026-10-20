@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Warmup Esport — Équipe esport & boutique officielle</title>
+  <meta name="description" content="Warmup Esport : notre histoire, nos joueurs et nos maillots officiels.">
+  <link rel="icon" href="assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,700;1,800&family=Barlow:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="home">
+  <div class="loader"><img src="assets/logo.png" alt=""></div>
+
+  <main>
+    <!-- ===== 1. HERO : plongée dans le logo (canvas piloté par le scroll) ===== -->
+    <section id="hero-runway">
+      <div class="hero-sticky-frame">
+        <canvas id="hero-canvas" aria-hidden="true"></canvas>
+
+        <div class="hero-content-stage">
+          <div class="hero-stage active">
+            <h1 class="hero-title">Un mot d'ordre :<br><span class="accent">gagner.</span></h1>
+            <p class="hero-desc">Une équipe soudée, un seul objectif : s'imposer sur la scène compétitive.</p>
+            <div class="hero-btns">
+              <a href="joueurs.html" class="h-btn primary">Découvrir l'équipe
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+              <a href="#histoire" class="h-btn secondary">Notre histoire</a>
+            </div>
+          </div>
+          <div class="hero-stage">
+            <p class="hero-eyebrow">Au cœur de l'équipe</p>
+            <h2 class="hero-title">WRMP <span class="accent">ON TOP</span></h2>
+            <p class="hero-desc">Des heures d'entraînement, une communauté fidèle et des couleurs qu'on porte avec fierté.</p>
+            <div class="hero-btns">
+              <a href="#roster" class="h-btn primary">Voir le roster
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+              <a href="contact.html" class="h-btn secondary">Nous rejoindre</a>
+            </div>
+          </div>
+          <div class="hero-stage">
+            <p class="hero-eyebrow">Collection 2026</p>
+            <h2 class="hero-title">Nos <span class="accent">Couleurs</span></h2>
+            <p class="hero-desc">Les maillots officiels 2026 sont disponibles, floqués à ton pseudo.</p>
+            <div class="hero-btns">
+              <a href="boutique.html" class="h-btn primary">Boutique officielle
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+              <a href="#collections" class="h-btn secondary">Voir les maillots</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="hud-hint"><span class="mouse animate-scroll"></span>Scrolle pour entrer</div>
+        <div class="hud-steps">
+          <span class="on">01</span><span>02</span><span>03</span>
+          <div class="hud-bar"><i></i></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 2. MAILLOTS (flèches pour passer d'un maillot à l'autre) ===== -->
+    <section class="collections" id="collections">
+      <div class="col-bg"></div>
+      <div class="col-particles" aria-hidden="true"></div>
+      <div class="col-inner">
+        <div class="col-left">
+          <div class="col-num"><span class="cur">01</span> / <span class="tot">04</span></div>
+          <h2 class="col-name"></h2>
+          <p class="col-headline"></p>
+          <a href="boutique.html" class="pill col-link">Voir le maillot</a>
+        </div>
+        <div class="col-stage">
+          <button class="col-arrow prev" aria-label="Maillot précédent">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+          </button>
+          <div class="col-center"></div>
+          <button class="col-arrow next" aria-label="Maillot suivant">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+        <div class="col-right">
+          <p class="col-desc"></p>
+          <div class="col-specs"></div>
+          <div class="col-price"></div>
+        </div>
+      </div>
+      <div class="col-progress"></div>
+    </section>
+
+    <!-- ===== 3. NOTRE HISTOIRE ===== -->
+    <section class="heritage" id="histoire">
+      <div class="heritage-media"><div class="heritage-img"></div></div>
+      <div class="heritage-text">
+        <span class="kicker">Depuis 2025</span>
+        <h2 class="display">Une histoire qui ne fait que <em>commencer</em></h2>
+        <p>Après avoir nous-mêmes été joueurs, nous avions envie de passer de l'autre côté. C'est pour cela que nous avons créé <strong>Warmup Esport</strong>.</p>
+        <p><strong>Notre philosophie :</strong> réunir des joueurs passionnés autour d'une même ambition, progresser ensemble et dominer la scène compétitive !</p>
+        <div class="heritage-stats">
+          <div><b data-count="6">0</b><small>Joueurs</small></div>
+          <div><b data-count="42">0</b><small>Tournois</small></div>
+          <div><b data-count="12">0</b><small>Podiums</small></div>
+          <div><b data-count="15" data-suffix="K">0</b><small>Followers</small></div>
+        </div>
+        <a href="joueurs.html" class="pill">Rencontrer les joueurs</a>
+      </div>
+    </section>
+
+    <!-- ===== 4. ROSTER ===== -->
+    <section class="roster" id="roster">
+      <div class="roster-head">
+        <span class="kicker">Line-up 2026</span>
+        <h2 class="display">Le <em>roster</em></h2>
+      </div>
+      <div class="roster-grid"></div>
+      <div class="roster-more">
+        <a href="joueurs.html" class="pill solid">Découvrir tous les joueurs et le staff →</a>
+      </div>
+    </section>
+
+    <!-- ===== 5. BANDEAU CTA ===== -->
+    <section class="cta-banner">
+      <img class="cta-logo" src="assets/logo.png" alt="">
+      <div class="cta-inner">
+        <span class="kicker">Rejoins l'aventure</span>
+        <h2 class="display">Prêt à passer <em>de l'autre côté ?</em></h2>
+        <div class="cta-btns">
+          <a href="boutique.html" class="pill solid">Boutique officielle</a>
+          <a href="contact.html" class="pill">Recrutement & partenariats</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 6. CONTACT ===== -->
+    <section class="contact-home" id="contact">
+      <div class="contact-home-inner">
+        <div class="ch-head">
+          <span class="kicker">Contact</span>
+          <h2 class="display">Rejoins le <em>mouvement</em></h2>
+          <p>Partenariat, recrutement, commande ou simple message de soutien : on lit tout.</p>
+        </div>
+        <form class="line-form" id="home-form">
+          <div class="lf-row">
+            <label><span>Nom / Pseudo</span><input name="name" required autocomplete="name"></label>
+            <label><span>E-mail</span><input name="email" type="email" required autocomplete="email"></label>
+          </div>
+          <label><span>Sujet</span>
+            <select name="subject">
+              <option>Question générale</option>
+              <option>Commande / boutique</option>
+              <option>Partenariat / sponsoring</option>
+              <option>Recrutement</option>
+            </select>
+          </label>
+          <label><span>Message</span><textarea name="message" rows="3" required></textarea></label>
+          <p class="hint" style="margin:-12px 0 22px">Tes données servent uniquement à répondre à ta demande. <a href="confidentialite.html" style="color:var(--violet-2);text-decoration:underline">Confidentialité</a></p>
+          <button class="pill solid" type="submit">Envoyer</button>
+          <p class="lf-ok">✓ Message envoyé, merci ! On revient vers toi très vite.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/hero.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>

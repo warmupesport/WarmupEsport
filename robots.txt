@@ -1,0 +1,10 @@
+# ✏️ Remplacer VOTRE-DOMAINE.fr par le vrai nom de domaine une fois le site en ligne
+User-agent: *
+Allow: /
+Disallow: /compte.html
+Disallow: /checkout.html
+Disallow: /commande.html
+Disallow: /emails/
+Disallow: /tools/
+
+Sitemap: https://www.VOTRE-DOMAINE.fr/sitemap.xml

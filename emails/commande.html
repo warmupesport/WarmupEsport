@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <title>Ta commande Warmup Esport est confirmée</title>
+  <!--
+    E-MAIL DE CONFIRMATION DE COMMANDE — envoyé après un paiement réussi.
+    Variables : {{prenom}}, {{numero_commande}}, {{date_commande}}, {{lignes_articles}} (lignes <tr> générées, voir emails/apercu.html),
+    {{sous_total}}, {{frais_livraison}}, {{total}}, {{mode_livraison}}, {{adresse_livraison}}, {{date_livraison}},
+    {{moyen_paiement}}, {{site_url}}, {{email_contact}}
+    Objet conseillé : « Commande {{numero_commande}} confirmée ✅ »
+  -->
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,800&family=Barlow:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body style="margin:0;padding:0;background:#050505;">
+  <div style="display:none;max-height:0;overflow:hidden;">Merci {{prenom}} ! Ta commande {{numero_commande}} est confirmée, on la prépare.</div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#050505;">
+    <tr><td align="center" style="padding:32px 12px;">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:#0e0b16;border:1px solid #2a2140;border-radius:18px;overflow:hidden;font-family:Barlow,Arial,Helvetica,sans-serif;color:#f1edfb;">
+
+        <!-- En-tête -->
+        <tr><td align="center" style="padding:30px 32px 24px;background:#12081f;background-image:radial-gradient(circle at 50% 0%,#4b1a9e 0%,#12081f 70%);">
+          <img src="{{site_url}}/assets/logo.png" width="64" height="64" alt="Warmup Esport" style="display:block;border:0;">
+          <div style="margin-top:10px;font-size:12px;font-weight:800;letter-spacing:6px;color:#ffffff;">WARM<span style="color:#b07cff;">UP</span> ESPORT</div>
+        </td></tr>
+
+        <!-- Titre -->
+        <tr><td align="center" style="padding:34px 40px 6px;">
+          <div style="display:inline-block;width:64px;height:64px;line-height:64px;border-radius:50%;background:#8b3dff;color:#ffffff;font-size:32px;font-weight:800;">✓</div>
+          <div style="margin-top:18px;font-style:italic;font-weight:800;font-family:'Barlow Condensed',Impact,'Arial Narrow',sans-serif;font-size:44px;line-height:1;color:#ffffff;">COMMANDE <span style="color:#8b3dff;">CONFIRMÉE</span></div>
+          <div style="margin-top:10px;font-size:12px;font-weight:800;letter-spacing:3px;color:#b07cff;">N° {{numero_commande}}</div>
+        </td></tr>
+
+        <tr><td style="padding:22px 40px 6px;font-size:16px;line-height:1.7;color:#cfc8e4;">
+          <p style="margin:0 0 14px;">Merci <b style="color:#ffffff;">{{prenom}}</b> ! On a bien reçu ta commande du {{date_commande}} et ton paiement est validé.</p>
+          <p style="margin:0;">On la prépare avec soin. Tu recevras un nouvel e-mail avec le lien de suivi dès qu'elle sera expédiée.</p>
+        </td></tr>
+
+        <!-- Articles -->
+        <tr><td style="padding:24px 40px 0;">
+          <div style="font-size:12px;font-weight:800;letter-spacing:3px;color:#b07cff;margin-bottom:8px;">TA COMMANDE</div>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:15px;color:#f1edfb;">
+            {{lignes_articles}}
+            <tr><td style="padding:14px 0 4px;color:#9d95b8;">Sous-total</td><td align="right" style="padding:14px 0 4px;color:#9d95b8;">{{sous_total}}</td></tr>
+            <tr><td style="padding:4px 0;color:#9d95b8;">Livraison</td><td align="right" style="padding:4px 0;color:#9d95b8;">{{frais_livraison}}</td></tr>
+            <tr><td style="padding:12px 0 0;border-top:1px solid #2a2140;font-style:italic;font-weight:800;font-family:'Barlow Condensed',Impact,sans-serif;font-size:26px;color:#ffffff;">Total payé</td>
+                <td align="right" style="padding:12px 0 0;border-top:1px solid #2a2140;font-style:italic;font-weight:800;font-family:'Barlow Condensed',Impact,sans-serif;font-size:26px;color:#ffffff;">{{total}}</td></tr>
+          </table>
+        </td></tr>
+
+        <!-- Livraison & paiement -->
+        <tr><td style="padding:26px 40px 0;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td valign="top" width="50%" style="padding:18px;background:#15101f;border:1px solid #2a2140;border-radius:14px;font-size:14px;line-height:1.6;color:#cfc8e4;">
+                <div style="font-size:12px;font-weight:800;letter-spacing:3px;color:#b07cff;margin-bottom:8px;">📦 LIVRAISON</div>
+                <b style="color:#ffffff;">{{mode_livraison}}</b><br>{{adresse_livraison}}<br><br>Estimée : <b style="color:#ffffff;">{{date_livraison}}</b>
+              </td>
+              <td width="12"></td>
+              <td valign="top" width="50%" style="padding:18px;background:#15101f;border:1px solid #2a2140;border-radius:14px;font-size:14px;line-height:1.6;color:#cfc8e4;">
+                <div style="font-size:12px;font-weight:800;letter-spacing:3px;color:#b07cff;margin-bottom:8px;">💳 PAIEMENT</div>
+                {{moyen_paiement}}<br>Montant : <b style="color:#ffffff;">{{total}}</b>
+              </td>
+            </tr>
+          </table>
+        </td></tr>
+
+        <!-- Bouton -->
+        <tr><td align="center" style="padding:30px 40px 8px;">
+          <a href="{{site_url}}/compte.html" style="display:inline-block;padding:16px 34px;background:#8b3dff;border-radius:999px;color:#ffffff;font-size:13px;font-weight:800;letter-spacing:2px;text-decoration:none;">SUIVRE MA COMMANDE →</a>
+        </td></tr>
+
+        <tr><td style="padding:22px 40px 34px;font-size:14px;line-height:1.7;color:#9d95b8;">
+          Les articles floqués sont fabriqués spécialement pour toi : ils ne peuvent être ni repris ni échangés.<br>
+          Une question sur ta commande ? Réponds simplement à cet e-mail.<br><br>
+          <span style="color:#cfc8e4;">Merci de porter nos couleurs,<br><b style="color:#ffffff;">Pierrick &amp; Luigi</b> — Warmup Esport</span><br>
+          <span style="font-style:italic;font-weight:800;font-family:'Barlow Condensed',Impact,sans-serif;font-size:22px;letter-spacing:1px;color:#ffffff;">WRMP <span style="color:#8b3dff;">ON TOP</span> 💜</span>
+        </td></tr>
+
+        <tr><td align="center" style="padding:20px 32px;background:#0a0811;border-top:1px solid #2a2140;font-size:12px;line-height:1.6;color:#7d759a;">
+          Warmup Esport · <a href="mailto:{{email_contact}}" style="color:#b07cff;">{{email_contact}}</a><br>
+          Cet e-mail confirme ta commande n° {{numero_commande}}. Conserve-le, il fait office de reçu.
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>

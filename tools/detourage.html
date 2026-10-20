@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Détourage des photos du staff</title>
+  <meta name="robots" content="noindex">
+  <style>
+    body { margin: 0; padding: 24px; background: #0b0911; color: #fff; font: 14px Inter, system-ui, sans-serif; }
+    h1 { font-size: 18px; margin: 0 0 6px; }
+    p { color: rgba(255,255,255,.65); margin: 0 0 18px; }
+    .grid { display: flex; gap: 24px; flex-wrap: wrap; }
+    figure { margin: 0; }
+    canvas { width: 320px; height: 320px; border-radius: 8px; background: repeating-conic-gradient(#2a2633 0 25%, #1a1722 0 50%) 0 0 / 24px 24px; }
+    figcaption { margin-top: 8px; color: rgba(255,255,255,.7); }
+    button { margin-top: 18px; height: 40px; padding: 0 18px; border: 0; border-radius: 8px; background: #8b3dff; color: #fff; font: 600 14px Inter, sans-serif; cursor: pointer; }
+    #log { margin-top: 18px; white-space: pre-wrap; font-family: ui-monospace, monospace; font-size: 12px; color: #b07cff; }
+  </style>
+</head>
+<body>
+  <h1>Détourage des photos du staff</h1>
+  <p>Supprime l'arrière-plan des photos de <code>assets/staff/src/</code> (IA dans le navigateur), recadre en carré 800 px et enregistre les PNG transparents dans <code>assets/staff/</code>. À ouvrir via le serveur local (tools/serve.ps1).</p>
+  <div class="grid" id="grid"></div>
+  <button id="run">Détourer et enregistrer</button>
+  <div id="log"></div>
+
+  <script type="module">
+    // Photos à traiter : source, recadrage carré (x, y, taille) dans l'image d'origine, fichier de sortie
+    const JOBS = [
+      // alphaFloor : en dessous de cette opacité (0-255), les pixels sont effacés (supprime les « fantômes » du décor)
+      { src: "../assets/staff/src/pierrick.jpg", crop: [130, 530, 570], out: "pierrick-cut.png", alphaFloor: 120 },
+      { src: "../assets/staff/src/luigi.jpg", crop: [0, 0, 400], out: "luigi-cut.png", alphaFloor: 20 },
+    ];
+    const SIZE = 800;
+    const log = (m) => (document.getElementById("log").textContent += m + "\n");
+    const loadImg = (url) => new Promise((ok, ko) => { const i = new Image(); i.onload = () => ok(i); i.onerror = ko; i.src = url; });
+
+    // Moteur 1 : @imgly/background-removal (meilleure qualité sur les cheveux)
+    async function imglyCutout(url) {
+      const { removeBackground } = await import("https://esm.sh/@imgly/background-removal@1.4.5");
+      const blob = await removeBackground(new URL(url, location.href).href, { model: "medium", output: { format: "image/png" } });
+      return loadImg(URL.createObjectURL(blob));
+    }
+
+    // Nettoyage : ne garde que la plus grande zone opaque (la personne), supprime les restes isolés
+    function keepMainSubject(source, floor = 0) {
+      const c = document.createElement("canvas");
+      c.width = source.naturalWidth || source.width; c.height = source.naturalHeight || source.height;
+      const g = c.getContext("2d"); g.drawImage(source, 0, 0);
+      const d = g.getImageData(0, 0, c.width, c.height), W = c.width, H = c.height;
+      // Efface les zones à peine opaques, puis rééchelonne l'opacité pour garder des bords doux
+      if (floor) for (let i = 3; i < d.data.length; i += 4) d.data[i] = Math.max(0, Math.min(255, (d.data[i] - floor) * 255 / (255 - floor)));
+      const label = new Int32Array(W * H).fill(-1), sizes = [];
+      for (let i = 0; i < W * H; i++) {
+        if (label[i] !== -1 || d.data[i * 4 + 3] < 40) continue;
+        const id = sizes.length, stack = [i]; label[i] = id; let n = 0;
+        while (stack.length) {
+          const p = stack.pop(); n++;
+          const x = p % W, y = (p - x) / W;
+          for (const q of [x > 0 ? p - 1 : -1, x < W - 1 ? p + 1 : -1, y > 0 ? p - W : -1, y < H - 1 ? p + W : -1]) {
+            if (q >= 0 && label[q] === -1 && d.data[q * 4 + 3] >= 40) { label[q] = id; stack.push(q); }
+          }
+        }
+        sizes.push(n);
+      }
+      const main = sizes.indexOf(Math.max(...sizes));
+      for (let i = 0; i < W * H; i++) if (label[i] !== main && d.data[i * 4 + 3] >= 40) d.data[i * 4 + 3] = 0;
+      g.putImageData(d, 0, 0);
+      return c;
+    }
+
+    // Moteur 2 (secours) : MediaPipe, segmentation de personnes
+    let segmenter = null;
+    async function mediapipeCutout(url) {
+      const base = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
+      const { FilesetResolver, ImageSegmenter } = await import(base + "/vision_bundle.mjs");
+      if (!segmenter) {
+        const fileset = await FilesetResolver.forVisionTasks(base + "/wasm");
+        segmenter = await ImageSegmenter.createFromOptions(fileset, {
+          baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/latest/selfie_multiclass_256x256.tflite" },
+          runningMode: "IMAGE", outputConfidenceMasks: true, outputCategoryMask: false,
+        });
+      }
+      const img = await loadImg(url);
+      const res = segmenter.segment(img);
+      const bg = res.confidenceMasks[0].getAsFloat32Array(); // catégorie 0 = arrière-plan
+      const c = document.createElement("canvas"); c.width = img.naturalWidth; c.height = img.naturalHeight;
+      const g = c.getContext("2d"); g.drawImage(img, 0, 0);
+      const d = g.getImageData(0, 0, c.width, c.height);
+      for (let i = 0; i < bg.length; i++) d.data[i * 4 + 3] = Math.round(255 * Math.min(1, Math.max(0, (1 - bg[i] - 0.15) / 0.7)));
+      g.putImageData(d, 0, 0);
+      return c;
+    }
+
+    async function cutout(url) {
+      try { log("  moteur : imgly…"); return await imglyCutout(url); }
+      catch (e) { log("  imgly indisponible (" + e.message + "), moteur de secours : MediaPipe…"); return await mediapipeCutout(url); }
+    }
+
+    document.getElementById("run").onclick = async () => {
+      const grid = document.getElementById("grid");
+      grid.innerHTML = "";
+      for (const job of JOBS) {
+        log("→ " + job.src);
+        const cut = keepMainSubject(await cutout(job.src), job.alphaFloor);
+        const c = document.createElement("canvas"); c.width = c.height = SIZE;
+        const [x, y, s] = job.crop;
+        c.getContext("2d").drawImage(cut, x, y, s, s, 0, 0, SIZE, SIZE);
+        const fig = document.createElement("figure");
+        fig.append(c, Object.assign(document.createElement("figcaption"), { textContent: job.out }));
+        grid.append(fig);
+        const blob = await new Promise((ok) => c.toBlob(ok, "image/png"));
+        const r = await fetch("/__save?file=" + job.out, { method: "POST", body: blob });
+        log(r.ok ? "  ✓ enregistré : assets/staff/" + job.out : "  ✗ échec de l'enregistrement (" + r.status + ")");
+      }
+      log("Terminé.");
+      window.done = true;
+    };
+  </script>
+</body>
+</html>

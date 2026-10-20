@@ -1,0 +1,25 @@
+# En-têtes de sécurité HTTP — lus automatiquement par Netlify et Cloudflare Pages.
+# (Pour Vercel, les mêmes règles sont dans vercel.json.)
+# ⚠ Quand le paiement Stripe sera branché, ajouter https://js.stripe.com dans script-src et frame-src,
+#   et https://api.stripe.com dans connect-src.
+
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; frame-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests
+
+# Pages privées ou de démonstration : jamais indexées par les moteurs de recherche
+/compte.html
+  X-Robots-Tag: noindex
+/checkout.html
+  X-Robots-Tag: noindex
+/commande.html
+  X-Robots-Tag: noindex
+/emails/*
+  X-Robots-Tag: noindex
+/tools/*
+  X-Robots-Tag: noindex

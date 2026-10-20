@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paiement — Warmup Esport</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,700;1,800&family=Barlow:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="checkout">
+  <main>
+    <section class="section" style="padding-top:calc(var(--nav-h) + 50px)">
+      <div class="container">
+        <div class="steps">
+          <span class="done"><i>✓</i>Panier</span><b></b>
+          <span class="done"><i>✓</i>Compte</span><b></b>
+          <span class="current" id="st-ship"><i>3</i>Livraison</span><b></b>
+          <span id="st-pay"><i>4</i>Paiement</span><b></b>
+          <span><i>5</i>Confirmation</span>
+        </div>
+
+        <div class="notice demo">⚠️ <span><b>Mode démo</b> : aucun paiement réel n'est effectué et aucune donnée bancaire n'est enregistrée ni envoyée. Pour tester, utilise la carte <b>4242 4242 4242 4242</b>, une date future et n'importe quel code à 3 chiffres.</span></div>
+
+        <div id="empty" class="empty-state" hidden>Ton panier est vide.<br><br><a class="btn btn-sm" href="boutique.html">Voir la boutique</a></div>
+
+        <div class="checkout" id="checkout" hidden>
+          <div>
+            <!-- Étape 1 : coordonnées & livraison -->
+            <div class="co-block" id="b-ship">
+              <h2><span class="n">1</span> Livraison <button type="button" class="edit" id="edit-ship" hidden>Modifier</button></h2>
+              <div class="co-recap" id="ship-recap" hidden></div>
+              <form id="ship-form" novalidate>
+                <div class="form-row">
+                  <div class="form-group"><label class="field-label" for="s-first">Prénom</label><input id="s-first" autocomplete="given-name" required></div>
+                  <div class="form-group"><label class="field-label" for="s-last">Nom</label><input id="s-last" autocomplete="family-name" required></div>
+                </div>
+                <div class="form-group"><label class="field-label" for="s-phone">Téléphone</label><input id="s-phone" type="tel" autocomplete="tel" placeholder="06 12 34 56 78" required><span class="hint">Utilisé uniquement par le transporteur pour te prévenir de la livraison.</span></div>
+
+                <div class="field-label" style="margin:10px 0 12px">Mode de livraison</div>
+                <div class="choice-grid" id="ship-modes"></div>
+
+                <!-- Livraison à domicile -->
+                <div id="home-fields" hidden>
+                  <div class="form-group"><label class="field-label" for="s-addr">Adresse</label><input id="s-addr" autocomplete="address-line1" placeholder="12 rue de la Victoire"></div>
+                  <div class="form-group"><label class="field-label" for="s-addr2">Complément (optionnel)</label><input id="s-addr2" autocomplete="address-line2" placeholder="Bâtiment, étage, digicode…"></div>
+                  <div class="form-row">
+                    <div class="form-group"><label class="field-label" for="s-zip">Code postal</label><input id="s-zip" autocomplete="postal-code" inputmode="numeric"></div>
+                    <div class="form-group"><label class="field-label" for="s-city">Ville</label><input id="s-city" autocomplete="address-level2"></div>
+                  </div>
+                  <div class="form-group"><label class="field-label" for="s-country">Pays</label><select id="s-country" autocomplete="country-name"></select></div>
+                </div>
+
+                <!-- Point relais -->
+                <div id="relay-fields" hidden>
+                  <div class="relay-search">
+                    <div class="form-group" style="margin:0"><label class="field-label" for="r-zip">Code postal</label><input id="r-zip" inputmode="numeric" placeholder="75001"></div>
+                    <div class="form-group" style="margin:0"><label class="field-label" for="r-city">Ville</label><input id="r-city" placeholder="Paris"></div>
+                    <button type="button" class="btn btn-ghost" id="find-relay">Rechercher</button>
+                  </div>
+                  <div class="relay-list" id="relays"></div>
+                </div>
+
+                <div class="field-error" id="ship-error"></div>
+                <button class="btn full" type="submit">Continuer vers le paiement <span class="arrow">→</span></button>
+              </form>
+            </div>
+
+            <!-- Étape 2 : paiement -->
+            <div class="co-block locked" id="b-pay">
+              <h2><span class="n">2</span> Paiement</h2>
+              <!-- ⚠ À la mise en ligne, ce formulaire est remplacé par le module de paiement sécurisé du prestataire
+                   (ex. Stripe Payment Element) : les numéros de carte ne doivent jamais transiter par notre site. -->
+              <form id="pay-form" novalidate autocomplete="off">
+                <div class="choice-grid" style="grid-template-columns:1fr">
+                  <label class="choice"><input type="radio" name="pm" checked><span class="ico">💳</span><span><b>Carte bancaire</b><small>CB, Visa, Mastercard</small></span></label>
+                </div>
+                <div class="form-group"><label class="field-label" for="c-name">Titulaire de la carte</label><input id="c-name" autocomplete="off"></div>
+                <div class="form-group card-field"><label class="field-label" for="c-num">Numéro de carte</label><div class="card-field"><input id="c-num" inputmode="numeric" placeholder="1234 1234 1234 1234" maxlength="23" autocomplete="off"><span class="card-brand" id="c-brand"></span></div></div>
+                <div class="form-row">
+                  <div class="form-group"><label class="field-label" for="c-exp">Expiration</label><input id="c-exp" inputmode="numeric" placeholder="MM / AA" maxlength="7" autocomplete="off"></div>
+                  <div class="form-group"><label class="field-label" for="c-cvc">Cryptogramme</label><input id="c-cvc" inputmode="numeric" placeholder="123" maxlength="4" autocomplete="off"></div>
+                </div>
+                <label class="check"><input type="checkbox" id="c-cgv"> <span>J'ai lu et j'accepte les <a href="cgv.html" target="_blank" style="color:var(--violet-2);text-decoration:underline">conditions générales de vente</a>. Je reconnais que les articles floqués à ma demande ne bénéficient pas du droit de rétractation.</span></label>
+                <div class="field-error" id="pay-error"></div>
+                <button class="btn full" type="submit" id="pay-btn">Payer</button>
+                <div class="secure">🔒 Paiement chiffré et sécurisé</div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Récapitulatif -->
+          <aside class="summary">
+            <h3>Ta <span class="grad">commande</span></h3>
+            <div id="sum-items"></div>
+            <div class="sum-line"><span>Sous-total</span><span id="sum-sub"></span></div>
+            <div class="sum-line"><span>Livraison</span><span id="sum-ship"></span></div>
+            <div class="sum-line total"><span>Total TTC</span><span id="sum-total"></span></div>
+            <div class="free-ship" id="free-ship"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/checkout.js"></script>
+</body>
+</html>
